@@ -18,6 +18,8 @@ spec:
         app: xinference-worker
       {{- include "charts.selectorLabels" . | nindent 8 }}
     spec:
+      # Added runtime class for NVIDIA
+      runtimeClassName: {{ .Values.xinferenceWorker.runtimeClassName }}
       initContainers:
       - name: check-supervisor
         image: {{ .Values.config.curl_image | quote }}
@@ -27,6 +29,9 @@ spec:
         command:
         - xinference-worker
         env:
+        # Added NVIDIA environment variables
+        - name: LD_LIBRARY_PATH
+          value: /usr/local/nvidia/lib64
         - name: POD_IP
           valueFrom:
             fieldRef:
@@ -61,15 +66,24 @@ spec:
           limits:
             nvidia.com/gpu: {{- include "charts.intToString" .Values.config.gpu_per_worker | quote }}
 {{- end }}
-{{- if .Values.config.persistence.enabled }}
+        # Added NVIDIA volume mounts
         volumeMounts:
+        {{- if .Values.config.persistence.enabled }}
           - mountPath: {{ .Values.config.persistence.mountPath }}
             name: xinference-home
+        {{- end }}
+          - name: nvidia-driver
+            mountPath: /usr/local/nvidia
+      # Added NVIDIA volumes
       volumes:
+      {{- if .Values.config.persistence.enabled }}
         - name: xinference-home
           persistentVolumeClaim:
             claimName: xinference-shared-volume-claim
-{{- end }}
+      {{- end }}
+        - name: nvidia-driver
+          hostPath:
+            path: /usr/local/nvidia
 
 ---
 apiVersion: v1
