@@ -4,13 +4,13 @@ config:
   curl_image: curlimages/curl:8.8.0
   image_pull_policy: ""
   worker_num: 1
-  gpu_per_worker: ""
+  gpu_per_worker: "1"  # Added GPU allocation
   model_src: "huggingface"
   persistence:
     enabled: false
     mountPath: "/data"
-  # any other environments
   extra_envs: {}
+
 storageClass:
   name: local-storage
   spec:
@@ -81,6 +81,24 @@ xinferenceSupervisor:
       requests:
         cpu: "1"
         memory: 4Gi
+      limits:
+        nvidia.com/gpu: 1
+    volumeMounts:
+      - name: nvidia-driver
+        mountPath: /usr/local/nvidia
+    env:
+      - name: POD_IP
+        valueFrom:
+          fieldRef:
+            fieldPath: status.podIP
+      - name: LD_LIBRARY_PATH
+        value: /usr/local/nvidia/lib64
+    volumes:  # Changed from extraVolumes to volumes
+      - name: nvidia-driver
+        hostPath:
+          path: /usr/local/nvidia
+  runtimeClassName: nvidia
+
 xinferenceWorker:
   strategy:
     type: Recreate
@@ -102,3 +120,20 @@ xinferenceWorker:
       requests:
         cpu: "2"
         memory: 8Gi
+      limits:
+        nvidia.com/gpu: 1  # Added GPU limit
+    volumeMounts:
+      - name: nvidia-driver
+        mountPath: /usr/local/nvidia
+    env:
+      - name: POD_IP
+        valueFrom:
+          fieldRef:
+            fieldPath: status.podIP
+      - name: LD_LIBRARY_PATH
+        value: /usr/local/nvidia/lib64
+    volumes:  # Changed from extraVolumes to volumes
+      - name: nvidia-driver
+        hostPath:
+          path: /usr/local/nvidia
+  runtimeClassName: nvidia
