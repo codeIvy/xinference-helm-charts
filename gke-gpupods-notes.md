@@ -60,8 +60,8 @@ nvidia-cuda-mps-server   nvidia-modprobe   nvidia-settings      nvidia-uninstall
 crictl ps | grep nvidia-gpu
 ```
 
-##Additional reading
-*https://developer.nvidia.com/blog/gpu-containers-runtime/
-*https://github.com/NVIDIA/k8s-device-plugin#quick-start
-*https://www.jimangel.io/posts/nvidia-rtx-gpu-kubernetes-setup/
-*https://cloud.google.com/kubernetes-engine/docs/how-to/gpus
+## Additional reading
+* https://developer.nvidia.com/blog/gpu-containers-runtime/
+* https://github.com/NVIDIA/k8s-device-plugin#quick-start
+* https://www.jimangel.io/posts/nvidia-rtx-gpu-kubernetes-setup/
+* https://cloud.google.com/kubernetes-engine/docs/how-to/gpus
