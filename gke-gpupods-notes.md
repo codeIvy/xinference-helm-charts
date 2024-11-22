@@ -34,13 +34,12 @@ nvidia-container-runtime-hook  nvidia-ctk
 ### Where is nvidia-smi?
 ```
 sudo find / -type f -name "nvidia-smi" 2>/dev/null
- /home/kubernetes/bin/nvidia/bin/nvidia-smi
+/home/kubernetes/bin/nvidia/bin/nvidia-smi
 ```
 
 ### Runtime?
 ```
 sudo cat /etc/containerd/config.toml | grep "containerd.runtimes.nvidia."
-
 sudo cat /etc/containerd/config.toml  | grep bin
 ```
 OUTPUT:
@@ -50,9 +49,11 @@ bin_dir = "/home/kubernetes/bin"
 ls /home/kubernetes/bin/nvidia/bin/
 ```
 OUTPUT:
+```
 nvidia-bug-report.sh     nvidia-debugdump  nvidia-ngx-updater   nvidia-sleep.sh   nvidia-xconfig
 nvidia-cuda-mps-control  nvidia-installer  nvidia-persistenced  nvidia-smi
 nvidia-cuda-mps-server   nvidia-modprobe   nvidia-settings      nvidia-uninstall
+```
 
 # check nvidia containers running
 ```
@@ -60,7 +61,7 @@ crictl ps | grep nvidia-gpu
 ```
 
 ##Additional reading
-https://developer.nvidia.com/blog/gpu-containers-runtime/
-https://github.com/NVIDIA/k8s-device-plugin#quick-start
-https://www.jimangel.io/posts/nvidia-rtx-gpu-kubernetes-setup/
-https://cloud.google.com/kubernetes-engine/docs/how-to/gpus
+*https://developer.nvidia.com/blog/gpu-containers-runtime/
+*https://github.com/NVIDIA/k8s-device-plugin#quick-start
+*https://www.jimangel.io/posts/nvidia-rtx-gpu-kubernetes-setup/
+*https://cloud.google.com/kubernetes-engine/docs/how-to/gpus
