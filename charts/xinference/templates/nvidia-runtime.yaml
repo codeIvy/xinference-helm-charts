@@ -1,0 +1,12 @@
+{{- if and .Values.config.gpu_per_worker .Values.nvidia.runtimeClass.create }}
+apiVersion: node.k8s.io/v1
+kind: RuntimeClass
+metadata:
+  name: nvidia
+  labels:
+    {{- include "charts.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "-5"
+handler: nvidia
+{{- end }}
