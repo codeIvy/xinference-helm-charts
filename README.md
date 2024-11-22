@@ -9,7 +9,7 @@ helm search repo xinference/xinference --devel --versions
 # install xinference
 helm install xinference xinference/xinference -n xinference --version 0.0.1-v<xinference_release_version>
 
-## If you are having troubles with missing libcuda
+## If you are having troubles with missing libcuda, but you are sure it is present.
 ```
 # Create nvidia-runtime.yaml at the root level
 cat > nvidia-runtime.yaml <<EOF
@@ -22,6 +22,30 @@ EOF
 
 # Apply it to the cluster
 kubectl apply -f nvidia-runtime.yaml
+```
+
+## Example of pod spec using runtimeClass:
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: gpu-test
+spec:
+  runtimeClassName: nvidia #this is required to use correct container runtime
+  containers:
+  - name: cuda
+    image: nvidia/cuda:12.0.0-base-ubuntu20.04
+    command: ["nvidia-smi"]
+    resources:
+      limits:
+        nvidia.com/gpu: 1 #mandatory to run properly
+      requests:
+        nvidia.com/gpu: 1 #mandatory to run properly
+    env:
+    - name: NVIDIA_VISIBLE_DEVICES
+      value: "all"
+    - name: NVIDIA_DRIVER_CAPABILITIES
+      value: "compute,utility"
 ```
 ## How to find out NVIDIA_DRIVER_VERSION and TORCH_CUDA_ARCH_LIST
 ```
